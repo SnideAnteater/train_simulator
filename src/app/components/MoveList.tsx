@@ -17,8 +17,8 @@ const MoveList: React.FC<MoveListProps> = ({ moves }) => {
       {moves.length > 0 ? (
         <ul>
           {moves.map((move, index) => (
-            <div>
-              <li key={index}>
+            <div key={index}>
+              <li>
                 <strong>Time:</strong> {move.time} seconds
                 <br />
                 <strong>Train:</strong> {move.train}
