@@ -28,7 +28,7 @@ export interface Move {
 }
 
 export interface InputFormValues {
-  stations: string[];
+  stations: string;
   edges: Edge[];
   trains: Train[];
   packages: Package[];

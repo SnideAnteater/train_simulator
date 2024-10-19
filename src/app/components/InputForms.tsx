@@ -7,7 +7,7 @@ import MoveList from "./MoveList";
 import ProcessDijkstra from "../algorithm/ProcessDijkstra";
 
 const defaultValues: InputFormValues = {
-  stations: ["A", "B", "C"],
+  stations: "A,B,C",
   edges: [
     { name: "E1", node1: "A", node2: "B", time: 30 },
     { name: "E2", node1: "B", node2: "C", time: 10 },

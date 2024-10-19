@@ -18,52 +18,62 @@ const buildGraph = (edges: Edge[]): Record<string, Record<string, number>> => {
 // Dijkstra's algorithm to find the shortest path from a start node to all other nodes
 const dijkstra = (
   startNode: string,
-  stations: string[],
+  stations: string,
   graph: Record<string, Record<string, number>>
 ): Record<string, { time: number; path: string[]; timePath: number[] }> => {
-  const distances: Record<
-    string,
-    { time: number; path: string[]; timePath: number[] }
-  > = {};
-  const visited = new Set<string>();
+  try {
+    const distances: Record<
+      string,
+      { time: number; path: string[]; timePath: number[] }
+    > = {};
+    const visited = new Set<string>();
 
-  // Initialize distances
-  stations.forEach((station) => {
-    distances[station] = { time: Infinity, path: [], timePath: [] };
-  });
-  distances[startNode].time = 0;
-  distances[startNode].path = [startNode];
-  distances[startNode].timePath = [0];
+    // console.log(stations);
+    const stationArray = stations.split(",");
 
-  while (visited.size < stations.length) {
-    let minNode = "";
-    let minTime = Infinity;
+    // Initialize distances
+    stationArray.forEach((station) => {
+      distances[station] = { time: Infinity, path: [], timePath: [] };
+    });
+    distances[startNode].time = 0;
+    distances[startNode].path = [startNode];
+    distances[startNode].timePath = [0];
 
-    // Find the unvisited node with the smallest distance
-    for (const node in distances) {
-      if (!visited.has(node) && distances[node].time < minTime) {
-        minTime = distances[node].time;
-        minNode = node;
+    while (visited.size < stations.length) {
+      let minNode = "";
+      let minTime = Infinity;
+
+      // Find the unvisited node with the smallest distance
+      for (const node in distances) {
+        if (!visited.has(node) && distances[node].time < minTime) {
+          minTime = distances[node].time;
+          minNode = node;
+        }
+      }
+
+      if (!minNode) break;
+      visited.add(minNode);
+
+      // Update distances for neighboring nodes
+      for (const neighbor in graph[minNode]) {
+        const newTime = distances[minNode].time + graph[minNode][neighbor];
+        if (newTime < distances[neighbor].time) {
+          distances[neighbor] = {
+            time: newTime,
+            path: [...distances[minNode].path, neighbor],
+            timePath: [
+              ...distances[minNode].timePath,
+              graph[minNode][neighbor],
+            ],
+          };
+        }
       }
     }
 
-    if (!minNode) break;
-    visited.add(minNode);
-
-    // Update distances for neighboring nodes
-    for (const neighbor in graph[minNode]) {
-      const newTime = distances[minNode].time + graph[minNode][neighbor];
-      if (newTime < distances[neighbor].time) {
-        distances[neighbor] = {
-          time: newTime,
-          path: [...distances[minNode].path, neighbor],
-          timePath: [...distances[minNode].timePath, graph[minNode][neighbor]],
-        };
-      }
-    }
+    return distances;
+  } catch (error) {
+    console.log(error);
   }
-
-  return distances;
 };
 
 // Main function to process Dijkstra and manage train movements
@@ -116,7 +126,7 @@ const ProcessDijkstra = (data: InputFormValues): Move[] => {
       //   console.log(pickupPath);
       //   console.log(nextPackage);
       //   console.log(dropoffPath);
-      console.log(pickupPath.path.length - 1);
+      // console.log(pickupPath.path.length - 1);
       if (pickupPath.path.length - 1 == 0) {
         moves.push({
           time: currentTime,
@@ -128,7 +138,7 @@ const ProcessDijkstra = (data: InputFormValues): Move[] => {
         });
       }
       for (let i = 0; i < pickupPath.path.length - 1; i++) {
-        console.log(i);
+        // console.log(i);
         currentTime += pickupPath.timePath[i + 1];
         moves.push({
           time: currentTime,
@@ -145,7 +155,7 @@ const ProcessDijkstra = (data: InputFormValues): Move[] => {
       }
       carriedPackages.push(nextPackage);
       packagesMap.delete(nextPackage.name);
-      console.log(nextPackage);
+      // console.log(nextPackage);
 
       for (let i = 0; i < dropoffPath.path.length - 1; i++) {
         currentTime += dropoffPath.timePath[i + 1];
