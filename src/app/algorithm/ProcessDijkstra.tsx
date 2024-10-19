@@ -22,58 +22,53 @@ const dijkstra = (
   graph: Record<string, Record<string, number>>
 ): Record<string, { time: number; path: string[]; timePath: number[] }> => {
   try {
-    const distances: Record<
-      string,
-      { time: number; path: string[]; timePath: number[] }
-    > = {};
-    const visited = new Set<string>();
+  } catch (error) {}
+  const distances: Record<
+    string,
+    { time: number; path: string[]; timePath: number[] }
+  > = {};
+  const visited = new Set<string>();
 
-    // console.log(stations);
-    const stationArray = stations.split(",");
+  // console.log(stations);
+  const stationArray = stations.split(",");
 
-    // Initialize distances
-    stationArray.forEach((station) => {
-      distances[station] = { time: Infinity, path: [], timePath: [] };
-    });
-    distances[startNode].time = 0;
-    distances[startNode].path = [startNode];
-    distances[startNode].timePath = [0];
+  // Initialize distances
+  stationArray.forEach((station) => {
+    distances[station] = { time: Infinity, path: [], timePath: [] };
+  });
+  distances[startNode].time = 0;
+  distances[startNode].path = [startNode];
+  distances[startNode].timePath = [0];
 
-    while (visited.size < stations.length) {
-      let minNode = "";
-      let minTime = Infinity;
+  while (visited.size < stations.length) {
+    let minNode = "";
+    let minTime = Infinity;
 
-      // Find the unvisited node with the smallest distance
-      for (const node in distances) {
-        if (!visited.has(node) && distances[node].time < minTime) {
-          minTime = distances[node].time;
-          minNode = node;
-        }
-      }
-
-      if (!minNode) break;
-      visited.add(minNode);
-
-      // Update distances for neighboring nodes
-      for (const neighbor in graph[minNode]) {
-        const newTime = distances[minNode].time + graph[minNode][neighbor];
-        if (newTime < distances[neighbor].time) {
-          distances[neighbor] = {
-            time: newTime,
-            path: [...distances[minNode].path, neighbor],
-            timePath: [
-              ...distances[minNode].timePath,
-              graph[minNode][neighbor],
-            ],
-          };
-        }
+    // Find the unvisited node with the smallest distance
+    for (const node in distances) {
+      if (!visited.has(node) && distances[node].time < minTime) {
+        minTime = distances[node].time;
+        minNode = node;
       }
     }
 
-    return distances;
-  } catch (error) {
-    console.log(error);
+    if (!minNode) break;
+    visited.add(minNode);
+
+    // Update distances for neighboring nodes
+    for (const neighbor in graph[minNode]) {
+      const newTime = distances[minNode].time + graph[minNode][neighbor];
+      if (newTime < distances[neighbor].time) {
+        distances[neighbor] = {
+          time: newTime,
+          path: [...distances[minNode].path, neighbor],
+          timePath: [...distances[minNode].timePath, graph[minNode][neighbor]],
+        };
+      }
+    }
   }
+
+  return distances;
 };
 
 // Main function to process Dijkstra and manage train movements
