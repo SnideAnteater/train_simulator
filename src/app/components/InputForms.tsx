@@ -52,7 +52,7 @@ const InputForms: React.FC = () => {
       >
         <div className="m-5">
           <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-            Stations
+            Stations (separated by a comma &quot;,&quot;)
           </label>
           <input
             className="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-500 
