@@ -8,7 +8,17 @@ Frontend
 - React-hook-form
 - react-icons
 
-First, run the development server:
+## Getting Started
+
+### 1. Clone the repository
+
+### 2. Install Dependency
+
+```
+npm i
+```
+
+### 3. Run Development Build
 
 ```bash
 npm run dev
